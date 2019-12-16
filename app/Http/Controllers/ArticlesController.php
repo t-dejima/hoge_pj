@@ -44,10 +44,17 @@ class ArticlesController extends Controller
             $articles = DB::table('articles')
                     ->where('title', 'like', '%'.$keyword.'%')
                     ->paginate(10);
+               
+                     
+                     
+                    
+
+
 
         }else{//キーワードが入力されていない場合
-            //$articles = Article::all()
-            $articles = DB::table('articles')->paginate(10);
+           // $articles = Article::all()->paginate(10);
+           $articles = Article::paginate(15);
+           //$articles = DB::table('articles')->paginate(10);
         }
       
     
@@ -158,9 +165,9 @@ class ArticlesController extends Controller
   return redirect('/articles');
     }
     
-     public function delete($id)
+     public function delete(Request $request)
     {
-        Article::find($id)->delete(); // softDelete
+        Article::find($request->id)->delete(); // softDelete
  
         return redirect()->to('articles');
     }

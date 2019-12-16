@@ -7,6 +7,8 @@
 {{-- application.blade.phpの@yield('content')に以下のレイアウトを代入 --}}
 @section('content')
 
+
+
 <p>{{config('const.BASE_URL')}}</p>
 {{config('const.DIRECTRY_NAME.1')}}
 {{config('const.APP_SETTING.user')}}
@@ -61,10 +63,14 @@
       <td><a href="/articles/{{$article->id}}">詳細を表示</a></td>
        <td><a href="/articles/{{$article->id}}/edit">編集する</a></td>
   
-      <td>  <form action="/articles/delete/{{$article->id}}" method="post">
-      {{ csrf_field() }}
-      <input type="hidden" name="_method" value="delete">
-      <input type="submit" name="" value="削除する"></td>
+      <td>  <!-- ↓↓↓今回記述した箇所 ↓↓↓ -->
+　<form action="{{ action('ArticlesController@destroy', $article->id) }}" id="form_{{ $article->id }}" method="post">
+  {{ csrf_field() }}
+  {{ method_field('delete') }}
+  <a href="#" data-id="{{ $article->id }}" class="btn btn-danger btn-sm" onclick="deletePost(this);">削除</a>
+  </form>
+  <!-- ↑↑↑ 今回記述した箇所 ↑↑↑ --></a>
+      </td>
     </tr>
      @endforeach
   </tbody>
@@ -78,10 +84,18 @@
 </form>
 
 
-a
+<!-- ↓↓↓今回記述した箇所 ↓↓↓ -->
+<script>
 
-        <a href="/members/create">メンバー追加</a>
-        <h4>未削除</h4>
+function deletePost(e) {
+  'use strict';
+ 
+  if (confirm('本当に削除していいですか?')) {
+  document.getElementById('form_' + e.dataset.id).submit();
+  }
+}
+</script>
+<!-- ↑↑↑ 今回記述した箇所 ↑↑↑ -->
         <table>
             <tbody>
                 <tr>
