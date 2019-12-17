@@ -9,9 +9,9 @@ class Article extends Model
 {
     use SoftDeletes;
        protected $table = 'articles';
-        protected $fillable = ['title', 'body'];
+       protected $fillable = ['title', 'body'];
   
-//    protected $fillable = ['title', 'body'];
+
      // 「１対１」→ メソッド名は単数形
   Public function profile()
   {

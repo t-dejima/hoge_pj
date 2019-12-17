@@ -35,7 +35,7 @@
                 <form class="form-inline">
                     <div class="form-group">
                     <input type="text" name="keyword"
-                    placeholder="titleを入力">
+                    placeholder="">
                     <input type="submit" value="検索" >
                     </div>
                 </form>
@@ -63,18 +63,19 @@
       <td><a href="/articles/{{$article->id}}">詳細を表示</a></td>
        <td><a href="/articles/{{$article->id}}/edit">編集する</a></td>
   
-      <td>  <!-- ↓↓↓今回記述した箇所 ↓↓↓ -->
+      <td>
 　<form action="{{ action('ArticlesController@destroy', $article->id) }}" id="form_{{ $article->id }}" method="post">
   {{ csrf_field() }}
   {{ method_field('delete') }}
   <a href="#" data-id="{{ $article->id }}" class="btn btn-danger btn-sm" onclick="deletePost(this);">削除</a>
   </form>
-  <!-- ↑↑↑ 今回記述した箇所 ↑↑↑ --></a>
+  </a>
       </td>
     </tr>
      @endforeach
   </tbody>
 </table>
+
    {{ $articles->links() }}
     <p>CSVファイルを選択してください</p>
 <form role="form" method="post" action="import_csv" enctype="multipart/form-data">
@@ -84,36 +85,32 @@
 </form>
 
 
-<!-- ↓↓↓今回記述した箇所 ↓↓↓ -->
-<script>
 
+<script>
 function deletePost(e) {
   'use strict';
- 
   if (confirm('本当に削除していいですか?')) {
   document.getElementById('form_' + e.dataset.id).submit();
   }
 }
 </script>
-<!-- ↑↑↑ 今回記述した箇所 ↑↑↑ -->
-        <table>
-            <tbody>
-                <tr>
-                    <th>ID</th>
-                    <th>名前</th>
-                    <th>ポジション</th>
-                    <th>身長</th>
-                    <th>アクション</th>
-                </tr>
-                @forelse ($articles as $article)
+
+        <h4>削除済</h4>
+         <table class="table">
+          <tbody>
+                @forelse ($deleted as $delete)
                     <tr>
-                        <td>{{ $article->id }}</td>
-                        <td>{{ $article->title }}</td>
-                        <td>{{ $article->body }}</td>
+                        <td>{{ $delete->id }}</td>
+                        <td>{{ $delete->title }}</td>
+                        <td>{{ $delete->body }}</td>
                       
                         <td>
-                            <a href="/articles/destroy/{{ $article->id}}">削除</a>
+                            <a href="/articles/restore/{{ $delete->id}}">復旧</a>
+                            
                         </td>
+                         <td>
+                             <a href="/articles/force-delete/{{ $delete->id}}">完全削除</a>
+                             </td>
                     </tr>
                 @empty
                     <tr>
@@ -126,31 +123,6 @@ function deletePost(e) {
                 @endforelse
             </tbody>
         </table>
-        <h4>削除済</h4>
-         {{-- <table>
-          <tbody>
-                @forelse ($deleted as $delete)
-                    <tr>
-                        <td>{{ $delete->id }}</td>
-                        <td>{{ $delete->title }}</td>
-                        <td>{{ $delete->body }}</td>
-                      
-                        <td>
-                            <a href="/articles/restore/{{ $delete->id}}">復旧</a>
-                            <a href="/articles/force-delete/{{ $delete->id}}">完全削除</a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>--}}
     
 
 

@@ -32,3 +32,5 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('articles/restore/{id}', 'ArticlesController@restore'  ); // 復旧用。追記
+Route::get('articles/force-delete/{id}', 'ArticlesController@forceDelete'); // 完全削除用。追記

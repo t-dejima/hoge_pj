@@ -36,32 +36,31 @@ class ArticlesController extends Controller
       
        //キーワードを取得
         $keyword = $request->input('keyword');
-
-        //もしキーワードが入力されている場合
+       // もしキーワードが入力されている場合
         if(!empty($keyword))
         {   
             //検索
-            $articles = DB::table('articles')
-                    ->where('title', 'like', '%'.$keyword.'%')
-                    ->paginate(10);
-               
-                     
-                     
-                    
-
-
+          //  $articles = DB::table('articles')
+        //            ->where('title', 'like', '%'.$keyword.'%')
+          //         ->paginate(10);
+            
+          
+    $articles = Article::where('title','like','%' .$keyword.'%')
+    ->orWhere('body','like','%' .$keyword.'%' )
+    ->paginate(10);
+    
+           $deleted = Article::onlyTrashed()->get(); // 論理削除済のデータ取得
 
         }else{//キーワードが入力されていない場合
-           // $articles = Article::all()->paginate(10);
-           $articles = Article::paginate(15);
-           //$articles = DB::table('articles')->paginate(10);
+           
+         $articles = Article::paginate(5);
+        // $articles = Article::all();
+        // $articles = Article::all()::orderBy('id','desc')::paginate(15);
+           $deleted = Article::onlyTrashed()->get(); // 論理削除済のデータ取得
+          
         }
-      
+      return view('articles.index', compact('articles', 'deleted'));
     
-      //  $articles = Article::all();
-      // return $articles;
-      // 以下のように修正
-      return view('articles.index', ['articles' => $articles]);
     }
 
     /**
@@ -171,6 +170,28 @@ class ArticlesController extends Controller
  
         return redirect()->to('articles');
     }
+    
+      /*
+     * restore member
+     */
+    public function restore($id)
+    {
+        Article::onlyTrashed()->find($id)->restore(); // restoreメソッドで復旧
+ 
+        return redirect()->to('articles');
+    }
+ 
+    /*
+     * force delete member
+     */
+    public function forceDelete($id)
+    {
+        Article::onlyTrashed()->find($id)->forceDelete(); //forceDeleteメソッドで物理削除
+ 
+        return redirect()->to('articles');
+    }
+    
+    
 
     public function export_csv(Request $request)
     {
